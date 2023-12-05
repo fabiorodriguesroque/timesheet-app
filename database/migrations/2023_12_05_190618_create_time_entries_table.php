@@ -16,6 +16,7 @@ return new class extends Migration
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->time('lunching_time');
+            $table->longText('description');
             $table->timestamps();
         });
     }
