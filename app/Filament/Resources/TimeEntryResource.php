@@ -3,22 +3,26 @@
 namespace App\Filament\Resources;
 
 use App\Traits\hasTimeEntry;
+use App\Models\TimeEntry;
 use App\Filament\Resources\TimeEntryResource\Pages;
 use App\Filament\Resources\TimeEntryResource\RelationManagers;
-use App\Models\TimeEntry;
+use Filament\Resources\Resource;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\DatePicker;
+
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\TimePicker;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Filament\Tables\Filters\Filter;
 
 class TimeEntryResource extends Resource
 {
@@ -60,6 +64,13 @@ class TimeEntryResource extends Resource
                             ->minutesStep(15)
                             ->seconds(false)
                             ->native(false)
+                    ]),
+                Section::make('Observações')
+                    ->description('Escreva uma ligeira descrição sobre o que foi feito durante as horas de trabalho.')
+                    ->aside()
+                    ->schema([
+                        Textarea::make('description')
+                            ->label('Observação')
                     ])
             ]);
     }
@@ -89,8 +100,12 @@ class TimeEntryResource extends Resource
                 TextColumn::make('lunching_time')
                     ->label('Paragem')
                     ->getStateUsing(function (Model $record): string {
-                        $date = carbon::parse($record->lunching_time);
-                        return $date->translatedFormat('H:i');
+                        if ($record->lunching_time) {
+                            $date = carbon::parse($record->lunching_time);
+                            return $date->translatedFormat('H:i');
+                        }
+
+                        return '--:--';
                     }),
                 TextColumn::make('end_time')
                     ->label('Fim')
@@ -103,9 +118,28 @@ class TimeEntryResource extends Resource
                     ->getStateUsing(function (Model $record): string {
                         return $record->calculateTotalWorkedHours();
                     }),
-            ])
+            ])->defaultSort('start_time', 'asc')
             ->filters([
-                //
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('start_time')
+                            ->label('Data de Início')
+                            ->native(false),
+                        DatePicker::make('end_time')
+                            ->label('Data de Fim')
+                            ->native(false)
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['start_time'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('start_time', '>=', $date),
+                            )
+                            ->when(
+                                $data['end_time'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('end_time', '<=', $date),
+                            );
+                    })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
