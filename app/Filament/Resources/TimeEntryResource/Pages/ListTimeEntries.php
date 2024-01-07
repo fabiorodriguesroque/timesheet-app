@@ -16,7 +16,7 @@ class ListTimeEntries extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('Registar hora'),
+                ->label('Registar'),
         ];
     }
 }

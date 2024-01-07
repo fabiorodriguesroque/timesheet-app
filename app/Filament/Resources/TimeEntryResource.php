@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Traits\hasTimeEntry;
 use App\Models\TimeEntry;
+use App\Models\Project;
 use App\Filament\Resources\TimeEntryResource\Pages;
 use App\Filament\Resources\TimeEntryResource\RelationManagers;
 use Filament\Resources\Resource;
@@ -14,15 +15,19 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\DatePicker;
-
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Filament\Tables\Filters\Filter;
+use Closure;
+use Filament\Forms\Set;
 
 class TimeEntryResource extends Resource
 {
@@ -40,17 +45,42 @@ class TimeEntryResource extends Resource
     {
         return $form
             ->schema([
+                Section::make('Cliente')
+                    ->description('Escolha o cliente para quem trabalhou e o preço por hora.')
+                    ->aside()
+                    ->schema([
+                        Select::make('project_id')
+                            ->label('Cliente')
+                            ->required()
+                            ->options(fn() => Project::all()->pluck('name', 'id')->toArray())
+                            ->live()
+                            ->afterStateUpdated(function (Set $set, Get $get) {
+                                $project = Project::find($get('project_id'));
+
+                                return $project
+                                    ? $set('price_per_hour', $project->price_per_hour)
+                                    : $set('price_per_hour', null);
+                            }),
+                        TextInput::make('price_per_hour')
+                            ->label('Preço por hora')
+                            ->required()
+                            ->numeric()
+                            ->suffix('€')
+
+                    ]),
                 Section::make('Registo de horas')
                     ->description('Registe a hora e o dia em que começou e terminou.')
                     ->aside()
                     ->schema([
                         DateTimePicker::make('start_time')
                             ->label('Hora de início')
+                            ->required()
                             ->seconds(false)
                             ->native(false)
                             ->minutesStep(15),
                         DateTimePicker::make('end_time')
                             ->label('Hora de fim')
+                            ->required()
                             ->seconds(false)
                             ->native(false)
                             ->minutesStep(15)
