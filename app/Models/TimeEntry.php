@@ -32,36 +32,42 @@ class TimeEntry extends Model
 
         // Calculate the total minutes between $startTime and $endTime
         $totalMinutes = $startTime->diffInMinutes($endTime);
-        $totalHours = $startTime->diffInHours($endTime);
-        
+        // $totalHours = $startTime->diffInHours($endTime);
+
         if ($this->lunching_time) {
-            // Extract the minutes from $lunchingTime
-            $lunchingMinutes = $lunchingTime->minute;
+            $totalMinutesWithoutLunching = 0;
+            if ($lunchingTime->minute && $lunchingTime->hour) {
+                $lunchingHourInMinutes = $lunchingTime->hour * 60;
+                $totalMinutesLunching = $lunchingHourInMinutes + $lunchingTime->minute;
+                $totalMinutesWithoutLunching = $totalMinutes - $totalMinutesLunching;
+                return date('H:i', mktime(0, $totalMinutesWithoutLunching));
+            }
 
-            // Adjust the total minutes by subtracting the lunching minutes
-            $totalMinutesWithoutLunch = $totalMinutes - $lunchingMinutes;
+            if ($lunchingTime->minute) {
+                $totalMinutesWithoutLunching = $totalMinutes - $lunchingTime->minute;
+                return date('H:i', mktime(0, $totalMinutesWithoutLunching));
+            }
 
-            // Convert total minutes to hours (as a float)
-            $totalHoursWithoutLunch = $totalMinutesWithoutLunch / 60;
-            $totalMinutesWithoutLunch = $totalMinutesWithoutLunch % 60;
-
-            // Extract the hours from $lunchingTime
-            $lunchingHours = $lunchingTime->hour;
-
-            // Adjust the total hours by subtracting the lunching hours
-            $totalHoursWithoutLunchInt = $totalHours - $lunchingHours;
-
-            return $totalMinutesWithoutLunch > 0
-                ? $totalHoursWithoutLunchInt . ':' . $totalMinutesWithoutLunch
-                : $totalHoursWithoutLunchInt;
-
-        } else {
-            $minutes = $totalMinutes % 60;
-            
-            return $minutes > 0
-                ? $totalHours . ':' . $minutes % 60
-                : $totalHours;
+            if ($lunchingTime->hour) {
+                $lunchingHourInMinutes = $lunchingTime->hour * 60;
+                $totalMinutesWithoutLunching = $totalMinutes - $lunchingHourInMinutes;
+                return date('H:i', mktime(0, $totalMinutesWithoutLunching));
+            }
         }
+
+        // dd(date('H:i', mktime(0, $totalMinutes)));
+        
+        // if ($this->lunching_time) {
+        //     // Extract the minutes from $lunchingTime
+
+
+        // } else {
+        //     $minutes = $totalMinutes % 60;
+            
+        //     return $minutes > 0
+        //         ? $totalHours . ':' . $minutes % 60
+        //         : $totalHours;
+        // }
     }
 
     /**
