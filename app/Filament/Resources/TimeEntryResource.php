@@ -83,12 +83,7 @@ class TimeEntryResource extends Resource
                             ->required()
                             ->seconds(false)
                             ->native(false)
-                            ->minutesStep(15)
-                    ]),
-                Section::make('Paragem para almoço')
-                    ->description('Registe o número de horas que parou para almoçar.')
-                    ->aside()
-                    ->schema([
+                            ->minutesStep(15),
                         TimePicker::make('lunching_time')
                             ->label('Paragem para almoço')
                             ->minutesStep(15)
@@ -100,6 +95,7 @@ class TimeEntryResource extends Resource
                     ->aside()
                     ->schema([
                         Textarea::make('description')
+                            ->rows(10)
                             ->label('Observação')
                     ])
             ]);
