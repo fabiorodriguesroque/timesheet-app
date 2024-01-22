@@ -108,7 +108,6 @@ class TimeEntryResource extends Resource
             ->columns([
                 TextColumn::make('month')
                     ->label('Mês')
-                    ->sortable(['start_time'])
                     ->getStateUsing(function (Model $record): string {
                         $date = carbon::parse($record->start_time);
                         return $date->translatedFormat('j F, l');
