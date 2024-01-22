@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TimeEntry extends Model
 {
@@ -18,6 +19,11 @@ class TimeEntry extends Model
         'lunching_time',
         'description'
     ];
+
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
 
     /**
      * @var Datetime start_time
@@ -55,19 +61,10 @@ class TimeEntry extends Model
             }
         }
 
-        // dd(date('H:i', mktime(0, $totalMinutes)));
-        
-        // if ($this->lunching_time) {
-        //     // Extract the minutes from $lunchingTime
+        // Convert total minutes to hours (as a float)
+        $totalHours = $totalMinutes / 60;
 
-
-        // } else {
-        //     $minutes = $totalMinutes % 60;
-            
-        //     return $minutes > 0
-        //         ? $totalHours . ':' . $minutes % 60
-        //         : $totalHours;
-        // }
+        return $totalHours;
     }
 
     /**

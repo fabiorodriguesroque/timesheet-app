@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms\Set;
+use Filament\Tables\Filters\SelectFilter;
 
 class TimeEntryResource extends Resource
 {
@@ -107,16 +108,14 @@ class TimeEntryResource extends Resource
             ->columns([
                 TextColumn::make('month')
                     ->label('Mês')
+                    ->sortable(['start_time'])
                     ->getStateUsing(function (Model $record): string {
                         $date = carbon::parse($record->start_time);
-                        return $date->translatedFormat('j F');
+                        return $date->translatedFormat('j F, l');
                     }),
-                TextColumn::make('day')
-                    ->label('Dia da semana')
-                        ->getStateUsing(function (Model $record): string {
-                            $date = carbon::parse($record->start_time);
-                            return $date->translatedFormat('l');
-                        }),
+                TextColumn::make('project.name')
+                    ->label('Cliente')
+                    ->sortable(),
                 TextColumn::make('start_time')
                     ->label('Início')
                     ->getStateUsing(function (Model $record): string {
@@ -144,7 +143,7 @@ class TimeEntryResource extends Resource
                     ->getStateUsing(function (Model $record): string {
                         return $record->calculateTotalWorkedHours();
                     }),
-            ])->defaultSort('start_time', 'asc')
+            ])->defaultSort('start_time', 'desc')
             ->filters([
                 Filter::make('created_at')
                     ->form([
@@ -165,7 +164,10 @@ class TimeEntryResource extends Resource
                                 $data['end_time'],
                                 fn (Builder $query, $date): Builder => $query->whereDate('end_time', '<=', $date),
                             );
-                    })
+                    }),
+                SelectFilter::make('project_id')
+                    ->label('Cliente')
+                    ->options(fn () => Project::all()->pluck('name', 'id')->toArray())
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
