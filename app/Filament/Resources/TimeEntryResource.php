@@ -112,8 +112,9 @@ class TimeEntryResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('month')
-                    ->label('Mês')
+                TextColumn::make('start_time')
+                    ->label('Data')
+                    ->sortable()
                     ->getStateUsing(function (Model $record): string {
                         $date = carbon::parse($record->start_time);
                         return $date->translatedFormat('j F, l');
@@ -121,7 +122,7 @@ class TimeEntryResource extends Resource
                 TextColumn::make('project.name')
                     ->label('Cliente')
                     ->sortable(),
-                TextColumn::make('start_time')
+                TextColumn::make('start')
                     ->label('Início')
                     ->getStateUsing(function (Model $record): string {
                         $date = carbon::parse($record->start_time);
