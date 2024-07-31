@@ -49,11 +49,10 @@ class TimeEntriesPriceAmount extends ChartWidget
 
         $carbonInstance = Carbon::create($year, $month, 1);
         $firstDayOfMonth = $carbonInstance->copy()->startOfMonth();
-        $lastDayOfMonth = $carbonInstance->copy()->endOfMonth();
+        $lastDayOfMonth = $carbonInstance->copy()->endOfMonth()->addDay();
 
         $firstDayOfMonthString = $firstDayOfMonth->toDateString(); // "2024-06-01"
         $lastDayOfMonthString = $lastDayOfMonth->toDateString(); // "2024-06-30"
-
 
         // Retrieve TimeEntries within the specified date range
         $timeEntries = TimeEntry::whereBetween('start_time', [$firstDayOfMonthString, $lastDayOfMonthString])->get();
