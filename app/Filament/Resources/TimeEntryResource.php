@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Tables\Columns\HexBadge;
 use App\Traits\hasTimeEntry;
 use App\Models\TimeEntry;
 use App\Models\Project;
@@ -19,6 +20,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Tables;
+use Filament\Tables\Columns\ColorColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;

@@ -6,6 +6,7 @@ use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Models\Project;
 use Filament\Forms;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ProjectResource extends Resource
 {
     protected static ?string $model = Project::class;
-    
+
     protected static ?string $modelLabel = 'Cliente';
 
     protected static ?string $pluralModelLabel = 'Clientes';
@@ -39,7 +40,8 @@ class ProjectResource extends Resource
                         TextInput::make('price_per_hour')
                             ->label('Preço por hora')
                             ->numeric()
-                            ->suffixIcon('heroicon-o-currency-euro')
+                            ->suffixIcon('heroicon-o-currency-euro'),
+                        ColorPicker::make('color')
                     ]),
             ]);
     }

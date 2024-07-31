@@ -10,7 +10,7 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'price_per_hour'];
+    protected $fillable = ['name', 'price_per_hour', 'color'];
 
     protected function pricePerHour(): Attribute
     {
