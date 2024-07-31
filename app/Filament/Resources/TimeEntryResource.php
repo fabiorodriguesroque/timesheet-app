@@ -73,18 +73,24 @@ class TimeEntryResource extends Resource
                     ->description('Registe a hora e o dia em que começou e terminou.')
                     ->aside()
                     ->schema([
-                        DateTimePicker::make('start_time')
-                            ->label('Hora de início')
-                            ->required()
-                            ->seconds(false)
+                        DatePicker::make('date')
+                            ->label('Data')
                             ->native(false)
-                            ->minutesStep(15),
-                        DateTimePicker::make('end_time')
+                            ->maxDate(now())
+                            ->closeOnDateSelection()
+                            ->required(),
+                        TimePicker::make('start')
+                            ->label('Hora de inicio')
+                            ->native(false)
+                            ->minutesStep(15)
+                            ->seconds(false)
+                            ->required(),
+                        TimePicker::make('end')
                             ->label('Hora de fim')
-                            ->required()
-                            ->seconds(false)
                             ->native(false)
-                            ->minutesStep(15),
+                            ->minutesStep(15)
+                            ->seconds(false)
+                            ->required(),
                         TimePicker::make('lunching_time')
                             ->label('Paragem para almoço')
                             ->minutesStep(15)

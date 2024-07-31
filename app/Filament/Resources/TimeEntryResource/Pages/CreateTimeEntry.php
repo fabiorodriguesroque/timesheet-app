@@ -2,9 +2,13 @@
 
 namespace App\Filament\Resources\TimeEntryResource\Pages;
 
+use App\Actions\TimeEntry\GetDateTimesFromDateAndTime;
 use App\Filament\Resources\TimeEntryResource;
+use Carbon\Carbon;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Database\Eloquent\Model;
+use App\Actions\TimeEntry\CreateTimeEntry as CreateTimeEntryAction;
 
 class CreateTimeEntry extends CreateRecord
 {
@@ -20,5 +24,10 @@ class CreateTimeEntry extends CreateRecord
     protected function getCreatedNotificationTitle(): ?string
     {
         return 'Hora registada com sucesso!';
+    }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        return (new GetDateTimesFromDateAndTime())->handle($data);
     }
 }
