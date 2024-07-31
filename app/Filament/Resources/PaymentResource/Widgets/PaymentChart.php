@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\PaymentResource\Widgets;
 
 use App\Models\Payment;
+use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 
 class PaymentChart extends ChartWidget
@@ -44,10 +45,16 @@ class PaymentChart extends ChartWidget
 
     protected function getPaymentsData(int $month)
     {
-        $firstDayOfMonth = now()->setMonth($month)->startOfMonth();
-        $lastDayOfMonth = now()->setMonth($month)->endOfMonth();
+        $year = now()->year;
 
-        $amount = Payment::whereBetween('payment_date', [$firstDayOfMonth, $lastDayOfMonth])
+        $carbonInstance = Carbon::create($year, $month, 1);
+        $firstDayOfMonth = $carbonInstance->copy()->startOfMonth();
+        $lastDayOfMonth = $carbonInstance->copy()->endOfMonth();
+
+        $firstDayOfMonthString = $firstDayOfMonth->toDateString(); // "2024-06-01"
+        $lastDayOfMonthString = $lastDayOfMonth->toDateString(); // "2024-06-30"
+
+        $amount = Payment::whereBetween('payment_date', [$firstDayOfMonthString, $lastDayOfMonthString])
             ->sum('amount');
 
         return $amount / 100;

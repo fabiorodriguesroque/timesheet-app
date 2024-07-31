@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\TimeEntryResource\Widgets;
 
 use App\Models\TimeEntry;
+use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 
 class TimeEntriesPriceAmount extends ChartWidget
@@ -44,19 +45,26 @@ class TimeEntriesPriceAmount extends ChartWidget
 
     protected function getPriceAmount($month)
     {
-        $firstDayOfMonth = now()->setMonth($month)->startOfMonth();
-        $lastDayOfMonth = now()->setMonth($month)->endOfMonth();
-        
+        $year = now()->year;
+
+        $carbonInstance = Carbon::create($year, $month, 1);
+        $firstDayOfMonth = $carbonInstance->copy()->startOfMonth();
+        $lastDayOfMonth = $carbonInstance->copy()->endOfMonth();
+
+        $firstDayOfMonthString = $firstDayOfMonth->toDateString(); // "2024-06-01"
+        $lastDayOfMonthString = $lastDayOfMonth->toDateString(); // "2024-06-30"
+
+
         // Retrieve TimeEntries within the specified date range
-        $timeEntries = TimeEntry::whereBetween('start_time', [$firstDayOfMonth, $lastDayOfMonth])->get();
-    
+        $timeEntries = TimeEntry::whereBetween('start_time', [$firstDayOfMonthString, $lastDayOfMonthString])->get();
+
         // Calculate the total amount based on worked hours and price_per_hour
         $totalAmount = 0;
-    
+
         foreach ($timeEntries as $entry) {
             $totalAmount += (float) $entry->calculateTotalWorkedHoursFloat() * $entry->price_per_hour;
         }
-    
+
         return $totalAmount;
     }
 }
