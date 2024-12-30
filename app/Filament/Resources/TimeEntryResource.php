@@ -2,16 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Tables\Columns\HexBadge;
 use App\Traits\hasTimeEntry;
 use App\Models\TimeEntry;
 use App\Models\Project;
 use App\Filament\Resources\TimeEntryResource\Pages;
-use App\Filament\Resources\TimeEntryResource\RelationManagers;
 use Filament\Resources\Resource;
-use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Textarea;
@@ -20,16 +16,12 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Tables;
-use Filament\Tables\Columns\ColorColumn;
-use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Closure;
 use Filament\Forms\Set;
 use Filament\Tables\Filters\SelectFilter;
 

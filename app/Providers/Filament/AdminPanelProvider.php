@@ -9,7 +9,6 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use App\Filament\Resources\PaymentResource\Widgets\PaymentChart;
 use App\Filament\Resources\TimeEntryResource\Widgets\TimeEntriesPriceAmount;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;

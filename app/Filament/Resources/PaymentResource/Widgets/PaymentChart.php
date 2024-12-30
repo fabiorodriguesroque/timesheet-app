@@ -3,14 +3,29 @@
 namespace App\Filament\Resources\PaymentResource\Widgets;
 
 use App\Models\Payment;
+use App\Traits\hasTimeEntry;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 
 class PaymentChart extends ChartWidget
 {
+    use hasTimeEntry;
+
     protected static ?string $heading = 'Pagamentos recebidos';
 
     // protected int | string | array $columnSpan = 2;
+
+    public ?string $filter = null;
+
+    public function __construct()
+    {
+        $this->filter = (string) now()->year;
+    }
+
+    protected function getFilters(): ?array
+    {
+        return $this->getYearsFilter('payments');
+    }
 
     protected function getData(): array
     {
@@ -45,7 +60,7 @@ class PaymentChart extends ChartWidget
 
     protected function getPaymentsData(int $month)
     {
-        $year = now()->year;
+        $year = $this->filter;
 
         $carbonInstance = Carbon::create($year, $month, 1);
         $firstDayOfMonth = $carbonInstance->copy()->startOfMonth();

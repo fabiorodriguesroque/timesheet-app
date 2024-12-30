@@ -3,12 +3,28 @@
 namespace App\Filament\Resources\TimeEntryResource\Widgets;
 
 use App\Models\TimeEntry;
+use App\Traits\hasTimeEntry;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\DB;
 
 class TimeEntriesPriceAmount extends ChartWidget
 {
+    use hasTimeEntry;
+
     protected static ?string $heading = 'Pagamentos a receber';
+
+    public ?string $filter = null;
+
+    public function __construct()
+    {
+        $this->filter = (string) now()->year;
+    }
+
+    protected function getFilters(): ?array
+    {
+        return $this->getYearsFilter('time_entries');
+    }
 
     protected function getData(): array
     {
@@ -45,7 +61,7 @@ class TimeEntriesPriceAmount extends ChartWidget
 
     protected function getPriceAmount($month)
     {
-        $year = now()->year;
+        $year = $this->filter;
 
         $carbonInstance = Carbon::create($year, $month, 1);
         $firstDayOfMonth = $carbonInstance->copy()->startOfMonth();

@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 trait hasTimeEntry {
 
@@ -42,6 +43,21 @@ trait hasTimeEntry {
       }
 
       return $totalHoursWithoutLunchInt;
+  }
+
+  public function getYearsFilter(string $table): array
+  {
+      $currentYear = now()->year;
+          
+      $earliestYear = DB::table($table)
+          ->orderBy('created_at', 'asc')
+          ->value('created_at');
+
+      $startYear = $earliestYear ? (int) \Carbon\Carbon::parse($earliestYear)->year : $currentYear;
+
+      $years = range($startYear, $currentYear);
+
+      return collect($years)->mapWithKeys(fn($year) => [$year => (string) $year])->toArray();
   }
 
 }
