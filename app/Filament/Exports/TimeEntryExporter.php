@@ -16,12 +16,18 @@ class TimeEntryExporter extends Exporter
         return [
             ExportColumn::make('id')
                 ->label('ID'),
-            ExportColumn::make('project.name'),
-            ExportColumn::make('price_per_hour'),
-            ExportColumn::make('start_time'),
-            ExportColumn::make('end_time'),
-            ExportColumn::make('lunching_time'),
-            ExportColumn::make('description'),
+            ExportColumn::make('project.name')
+                ->label('Cliente'),
+            ExportColumn::make('price_per_hour')
+                ->label('Preço por Hora'),
+            ExportColumn::make('start_time')
+                ->label('Início'),
+            ExportColumn::make('end_time')
+                ->label('Fim'),
+            ExportColumn::make('lunching_time')
+                ->label('Descanso / Almoço'),
+            ExportColumn::make('description')
+                ->label('Descrição')
             // ExportColumn::make('created_at'),
             // ExportColumn::make('updated_at'),
         ];
