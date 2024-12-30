@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\TimeEntryExporter;
 use App\Models\TimeEntry;
 use App\Models\Project;
 use App\Filament\Resources\TimeEntryResource\Pages;
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Filament\Forms\Set;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Filters\SelectFilter;
 
 class TimeEntryResource extends Resource
@@ -141,7 +144,8 @@ class TimeEntryResource extends Resource
                     ->getStateUsing(function (Model $record): string {
                         return $record->calculateTotalWorkedHours();
                     }),
-            ])->defaultSort('start_time', 'desc')
+            ])
+                ->defaultSort('start_time', 'desc')
             ->filters([
                 Filter::make('created_at')
                     ->form([
@@ -167,6 +171,9 @@ class TimeEntryResource extends Resource
                     ->label('Cliente')
                     ->options(fn () => Project::all()->pluck('name', 'id')->toArray())
             ])
+            ->headerActions([
+
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
@@ -174,6 +181,8 @@ class TimeEntryResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+                ExportBulkAction::make()
+                    ->exporter(TimeEntryExporter::class)
             ]);
     }
 
