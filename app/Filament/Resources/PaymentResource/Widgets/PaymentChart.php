@@ -2,14 +2,14 @@
 
 namespace App\Filament\Resources\PaymentResource\Widgets;
 
+use App\Concerns\InteractsWithFilter;
 use App\Models\Payment;
-use App\Traits\hasTimeEntry;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 
 class PaymentChart extends ChartWidget
 {
-    use hasTimeEntry;
+    use InteractsWithFilter;
 
     protected static ?string $heading = 'Pagamentos recebidos';
 

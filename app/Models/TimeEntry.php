@@ -34,37 +34,25 @@ class TimeEntry extends Model
     {
         $startTime = Carbon::parse($this->start_time);
         $endTime = Carbon::parse($this->end_time);
-        $lunchingTime = Carbon::parse($this->lunching_time);
-
+        $lunchingTime = $this->lunching_time ? Carbon::parse($this->lunching_time) : null;
+    
         // Calculate the total minutes between $startTime and $endTime
         $totalMinutes = $startTime->diffInMinutes($endTime);
-        // $totalHours = $startTime->diffInHours($endTime);
-
-        if ($this->lunching_time) {
-            $totalMinutesWithoutLunching = 0;
-            if ($lunchingTime->minute && $lunchingTime->hour) {
-                $lunchingHourInMinutes = $lunchingTime->hour * 60;
-                $totalMinutesLunching = $lunchingHourInMinutes + $lunchingTime->minute;
-                $totalMinutesWithoutLunching = $totalMinutes - $totalMinutesLunching;
-                return date('H:i', mktime(0, $totalMinutesWithoutLunching));
-            }
-
-            if ($lunchingTime->minute) {
-                $totalMinutesWithoutLunching = $totalMinutes - $lunchingTime->minute;
-                return date('H:i', mktime(0, $totalMinutesWithoutLunching));
-            }
-
-            if ($lunchingTime->hour) {
-                $lunchingHourInMinutes = $lunchingTime->hour * 60;
-                $totalMinutesWithoutLunching = $totalMinutes - $lunchingHourInMinutes;
-                return date('H:i', mktime(0, $totalMinutesWithoutLunching));
-            }
+    
+        // Subtract lunching time if it exists
+        if ($lunchingTime) {
+            $lunchingMinutes = ($lunchingTime->hour * 60) + $lunchingTime->minute;
+            $totalMinutes -= $lunchingMinutes;
         }
-
-        // Convert total minutes to hours (as a float)
-        $totalHours = $totalMinutes / 60;
-
-        return $totalHours;
+    
+        // Ensure totalMinutes is non-negative
+        $totalMinutes = max(0, $totalMinutes);
+    
+        // Convert total minutes to HH:MM format
+        $hours = intdiv($totalMinutes, 60);
+        $minutes = $totalMinutes % 60;
+    
+        return sprintf('%02d:%02d', $hours, $minutes);
     }
 
     /**

@@ -2,15 +2,14 @@
 
 namespace App\Filament\Resources\TimeEntryResource\Widgets;
 
+use App\Concerns\InteractsWithFilter;
 use App\Models\TimeEntry;
-use App\Traits\hasTimeEntry;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\DB;
 
 class TimeEntriesPriceAmount extends ChartWidget
 {
-    use hasTimeEntry;
+    use InteractsWithFilter;
 
     protected static ?string $heading = 'Pagamentos a receber';
 
