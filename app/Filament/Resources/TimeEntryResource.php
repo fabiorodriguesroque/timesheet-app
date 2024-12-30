@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Traits\hasTimeEntry;
 use App\Models\TimeEntry;
 use App\Models\Project;
 use App\Filament\Resources\TimeEntryResource\Pages;
@@ -27,8 +26,6 @@ use Filament\Tables\Filters\SelectFilter;
 
 class TimeEntryResource extends Resource
 {
-    use hasTimeEntry;
-
     protected static ?string $model = TimeEntry::class;
 
     protected static ?string $modelLabel = 'Hora';
