@@ -107,6 +107,9 @@ class TimeEntryResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                ->label('REF')
+                ->sortable(),
                 TextColumn::make('start_time')
                     ->label('Data')
                     ->sortable()
