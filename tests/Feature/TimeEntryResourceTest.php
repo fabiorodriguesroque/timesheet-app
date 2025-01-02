@@ -16,19 +16,18 @@ describe('list time entry resource', function () {
             ->assertSuccessful();
     });
 
-    // it('shows only his time entries based on his projects', function () {
-    //     $otherUser = User::factory()->create();
-    //     $otherProject = Project::factory()->create(['user_id' => $otherUser->id]);
-    //     $otherTimeEntry = TimeEntry::factory()->create(['project_id' => $otherProject->id]);
+    it('shows only his time entries based on his projects', function () {
+        $otherUser = User::factory()->create();
+        $otherProject = Project::factory()->create(['user_id' => $otherUser->id]);
 
-    //     $project = Project::factory()->create(['user_id' => $this->user->id]);
-    //     $timeEntry = TimeEntry::factory()->create(['project_id' => $project->id]);
+        $project = Project::factory()->create(['user_id' => $this->user->id]);
+        $timeEntry = TimeEntry::factory()->create(['project_id' => $project->id]);
 
-    //     $this->actingAs($this->user)
-    //         ->get(TimeEntryResource::getUrl('index'))
-    //         ->assertSee($timeEntry->project->name)
-    //         ->assertSee($otherTimeEntry->project->name);
-    // });
+        $this->actingAs($this->user)
+            ->get(TimeEntryResource::getUrl('index'))
+            ->assertSee($timeEntry->project->name)
+            ->assertDontSee($otherProject->name);
+    });
 });
 
 describe('create time entry resource', function () {
