@@ -17,8 +17,8 @@ class Project extends Model
     protected function pricePerHour(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => $value * 100,
+            get: fn($value) => bcdiv($value, '100', 3),
+            set: fn($value) => bcmul($value, '100', 0),
         );
     }
 
