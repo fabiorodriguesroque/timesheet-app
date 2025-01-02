@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class Payment extends Model
 {
@@ -27,5 +28,14 @@ class Payment extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('project', function ($query) {
+            $query->whereHas('project', function ($query) {
+                $query->where('user_id', Auth::id());
+            });
+        });
     }
 }

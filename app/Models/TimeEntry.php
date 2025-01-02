@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class TimeEntry extends Model
 {
@@ -93,5 +94,14 @@ class TimeEntry extends Model
 
             return $totalHours;
         }
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('project', function ($query) {
+            $query->whereHas('project', function ($query) {
+                $query->where('user_id', Auth::id());
+            });
+        });
     }
 }

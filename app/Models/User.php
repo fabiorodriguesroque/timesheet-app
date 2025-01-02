@@ -7,6 +7,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -59,5 +60,25 @@ class User extends Authenticatable implements FilamentUser
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
+    }
+
+    /**
+     * Get the time entries for the user through the projects.
+     * 
+     * @return HasManyThrough<TimeEntry>
+     */
+    public function timeEntries(): HasManyThrough
+    {
+        return $this->hasManyThrough(TimeEntry::class, Project::class);
+    }
+
+    /**
+     * Get the payments for the user through the projects.
+     * 
+     * @return HasManyThrough<Payment>
+     */
+    public function payments(): HasManyThrough
+    {
+        return $this->hasManyThrough(TimeEntry::class, Project::class);
     }
 }

@@ -64,10 +64,7 @@ class ProjectResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->modifyQueryUsing(function (Builder $query) {
-                $query->where('user_id', Auth::id());
-            });
+            ]);
     }
 
     public static function getRelations(): array

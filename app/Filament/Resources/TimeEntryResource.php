@@ -26,6 +26,7 @@ use Filament\Forms\Set;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Support\Facades\Auth;
 
 class TimeEntryResource extends Resource
 {
@@ -108,8 +109,8 @@ class TimeEntryResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                ->label('REF')
-                ->sortable(),
+                    ->label('REF')
+                    ->sortable(),
                 TextColumn::make('start_time')
                     ->label('Data')
                     ->sortable()
