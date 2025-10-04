@@ -76,13 +76,13 @@ class PaymentResource extends Resource
                 TextColumn::make('day')
                     ->label('Dia da semana')
                     ->getStateUsing(function (Model $record): string {
-                        $date = carbon::parse($record->start_time);
+                        $date = carbon::parse($record->payment_date);
                         return $date->translatedFormat('l');
                     }),
                 TextColumn::make('amount')
                         ->label('Valor recebido')
                         ->money('eur')
-            ])
+            ])->defaultSort('payment_date', 'desc')
             ->filters([
                 //
             ])
